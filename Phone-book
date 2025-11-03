@@ -1,0 +1,97 @@
+#include <iostream>
+#include <map>
+#include <cctype>
+#include <string>
+#include <algorithm>
+#include <windows.h>
+using namespace std;
+
+
+
+int main() {
+
+    SetConsoleOutputCP (CP_UTF8);
+    SetConsoleCP (CP_UTF8);
+
+    map<string, string> phoneBook;
+    
+    // Начальные контакты
+    phoneBook["Даниил"] = "+79990000001";
+    phoneBook["Петя"] = "+79990000002";
+    phoneBook["Маша"] = "+79990000003";
+    phoneBook["миша"] = "+79990000003";
+    
+    char choice;
+    do {
+        cout << "\n ==Телефоннная книга== \n";
+        cout << "1. Добавить контакт\n";
+        cout << "2. Найти номер телефона\n";
+        cout << "3. Удалить контакт\n";
+        cout << "4. Показать все\n";
+        cout << "5. Выход\n";
+        cout << "Выберите действие: ";
+        cin >> choice;
+        
+        if (choice == '1') {
+            string name, number;
+            cin.ignore();
+            cout << "Имя: ";
+            getline(cin, name);
+            cout << "номер: ";
+            getline(cin, number);
+            
+            string key = name;
+            transform(key.begin(), key.end(), key.begin(), ::tolower); //Петя ПеТя петя
+            
+            phoneBook[key] = number;
+            cout << "Контакт добавлен! \n";
+            
+        } else if (choice == '2') {
+            string name;
+            cin.ignore();
+            cout << "Введите имя: ";
+            getline(cin, name);
+            string key = name;
+            transform(key.begin(), key.end(), key.begin(), ::tolower);
+            
+            auto it = phoneBook.find(key);
+            if (it != phoneBook.end()) {
+                cout << name << ": " << it->second << endl;
+            } else {
+                cout << "Контакт не найден\n";
+            }
+        } else if (choice == '3') {
+            string name;
+            cin.ignore();
+            cout << "Имя для удаления: ";
+            getline(cin, name);
+            string key = name;
+            transform(key.begin(), key.end(), key.begin(), ::tolower);
+            
+            if (phoneBook.erase(key)) {
+                cout << "Контакт удален.\n";
+            } else {
+                cout << "Контакт не найден.\n";
+            }
+            
+        } else if (choice == '4') {
+            if (phoneBook.empty()) {
+                cout << "Книга пуста.\n";
+            } else {
+                cout << "Все контакты: \n";
+                for (const auto& contact : phoneBook) {
+                    cout << contact.first << contact.second << endl;
+                }
+            }
+            
+            
+        } else if (choice == '5') {
+            cout << "До свидания! \n";
+        } else {
+            cout << "Не верный выбор\n";
+        }
+        
+    } while (choice != '5');
+    
+    return 0;
+}
